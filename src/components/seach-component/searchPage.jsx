@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./searchPage.css";
+import { useNavigate } from "react-router-dom";
 
 class SearchPage extends Component {
   constructor(props) {
@@ -15,10 +16,11 @@ class SearchPage extends Component {
   render() {
     return (
       <div className="search">
-        <form onSubmit={this.handleSubmit}>
+        <form className="search-form" onSubmit={this.handleSubmit}>
           <div className="searchInputs">
             <input
               type="text"
+              className="search-input"
               placeholder={"Search"}
               value={this.state.wordEntered}
               onChange={this.handleFilter}
@@ -29,11 +31,13 @@ class SearchPage extends Component {
         {this.state.filteredData.length != 0 && (
           <div className="dataResult">
             {this.state.filteredData.map((movie) => {
-              console.log(movie);
               return (
-                <div className="movie-section" key={movie.id}>
+                <div
+                  className="movie-section"
+                  key={movie.id}
+                  onClick={() => this.goToMovieDetails(movie.id)}
+                >
                   <img className="image-section" src={movie.image} />
-                  <p>{movie.title}</p>
                   <div className="image-hover">
                     <p>{movie.id}</p>
                   </div>
@@ -44,6 +48,10 @@ class SearchPage extends Component {
         )}
       </div>
     );
+  }
+
+  goToMovieDetails(movieId) {
+    this.props.navigate("/movie/" + movieId);
   }
 
   searchMovies = () => {
@@ -79,4 +87,9 @@ class SearchPage extends Component {
   };
 }
 
-export default SearchPage;
+function WithNavigate(props) {
+  let navigate = useNavigate();
+  return <SearchPage {...props} navigate={navigate} />;
+}
+
+export default WithNavigate;
