@@ -29,7 +29,7 @@ const searchMovies = async (query, cb) => {
     .then((res) => res.json())
     .then(
       (result) => {
-        console.log(result);
+        console.log("DATA");
         return result;
       },
       (error) => {}
@@ -66,15 +66,21 @@ export default function Dashboard() {
           <div className="dataResult">
             {results.map((movie) => {
               return (
-                <div
-                  className="movie-section"
-                  key={movie.id}
-                  onClick={() => navigate(`/movie/${movie.id}`)}
-                >
-                  <img className="image-section" src={movie.image} />
-                  <div className="image-hover">
-                    <p>{movie.id}</p>
-                  </div>
+                <div className="movie-container" key={movie.id}>
+                  <a onClick={() => navigate(`/movie/${movie.id}`)}>
+                    <div>
+                      <div>
+                        <img
+                          className="image-container"
+                          src={movie.image}
+                        ></img>
+                        <img
+                          className="image-container"
+                          src={movie.image}
+                        ></img>
+                      </div>
+                    </div>
+                  </a>
                 </div>
               );
             })}

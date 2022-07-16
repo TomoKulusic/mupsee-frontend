@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import MenuItem from "@mui/material/MenuItem";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import "./toolbar.css";
 
 class ToolbarComponent extends Component {
   pages = [
