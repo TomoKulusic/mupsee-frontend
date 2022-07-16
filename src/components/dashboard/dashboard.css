@@ -1,6 +1,8 @@
 .movie-section {
+  position: relative;
+  padding: 4px;
   height: 450px;
-  /* width: 150px; */
+  width: 300px;
   position: relative;
 }
 
@@ -91,6 +93,7 @@ input:focus {
   flex-direction: row;
   justify-content: space-between;
   padding: 100px 70px 0 70px;
+  flex-wrap: wrap;
 }
 
 .dataResult::-webkit-scrollbar {
