@@ -3,6 +3,7 @@ import { Routes, Route, Link } from "react-router-dom";
 import ToolbarComponent from "./components/toolbar/toolbar";
 import MoviePage from "./components/movie-page/moviePage";
 import Dashboard from "./components/dashboard/dashboard";
+import Favorites from "./components/favorites/favorites";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/movie/:id" element={<MoviePage />} />
+          <Route path="/favorites" element={<Favorites />} />
         </Routes>
       </div>
     </div>

@@ -13,7 +13,7 @@ const SearchInput = ({ value, onChangeText }) => {
         type="text"
         value={value}
         onChange={onChangeText}
-        placeholder="Search beer by name"
+        placeholder="Search movie by name"
       />
     </div>
   );

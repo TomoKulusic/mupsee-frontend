@@ -4,7 +4,7 @@ p {
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
-.page {
+.page > div {
   height: 100%;
   width: 100%;
   display: flex;
