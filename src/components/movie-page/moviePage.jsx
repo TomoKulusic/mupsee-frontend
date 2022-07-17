@@ -12,6 +12,7 @@ import "react-alice-carousel/lib/alice-carousel.css";
 // import Carousel from "react-bootstrap/Carousel";
 
 import { Swiper, SwiperSlide } from "swiper/react";
+import authHeader from "../../services/auth-header";
 
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -57,7 +58,6 @@ class MoviePage extends Component {
   }
 
   IsMovieFavorite = () => {
-    console.log("aa");
     fetch(
       "https://localhost:7289/Mupsee/CheckIsFavorite?movieId=" +
         this.props.params.id
@@ -172,10 +172,9 @@ class MoviePage extends Component {
     );
   }
 
-  _onReady(event) {
-    // access to player in all event handlers via event.target
-    event.target.pauseVideo();
-  }
+  // _onReady(event) {
+  //   event.target.pauseVideo();
+  // }
 
   handleClick = () => {
     this.setState({ snackbar: true });
@@ -194,7 +193,8 @@ class MoviePage extends Component {
 
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      // headers: { "Content-Type": "application/json" },
+      header: authHeader(),
       body: JSON.stringify({
         id: this.state.data.id,
         isFavorite: value,
@@ -208,17 +208,21 @@ class MoviePage extends Component {
   };
 
   getMovie = () => {
+    const requestOptions = {
+      method: "GET",
+      headers: authHeader(),
+    };
+
     fetch(
       "https://localhost:7289/Mupsee/SearchByIdAsync?movieId=" +
-        this.props.params.id
+        this.props.params.id,
+      requestOptions
     )
       .then((res) => res.json())
       .then(
         (result) => {
           console.log(result);
           this.setState({ data: result });
-          // this.setState({  });
-          // console.log(this.state.trailers);
         },
         (error) => {}
       );

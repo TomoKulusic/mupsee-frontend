@@ -3,6 +3,8 @@ import "./dashboard.css";
 import { useNavigate } from "react-router-dom";
 import debounce from "lodash.debounce";
 import SearchInput from "../search/searchInput";
+import authHeader from "../../services/auth-header";
+import { useAuth } from "../../services/useAuth";
 
 let url = "https://localhost:7289/Mupsee/SearchAsync";
 
@@ -23,13 +25,15 @@ const searchMovies = async (query, cb) => {
     url = "https://localhost:7289/Mupsee/SearchAsync";
   }
 
-  console.log(url);
+  const requestOptions = {
+    method: "GET",
+    headers: authHeader(),
+  };
 
-  return fetch(url)
+  return fetch(url, requestOptions)
     .then((res) => res.json())
     .then(
       (result) => {
-        console.log("DATA");
         return result;
       },
       (error) => {}
@@ -41,6 +45,7 @@ export default function Dashboard() {
   const [results, setResults] = React.useState([]);
   const [dataLoaded, setLoader] = React.useState([]);
   const navigate = useNavigate();
+  const login = useAuth();
 
   React.useEffect(() => {
     setLoader(true);
@@ -87,111 +92,6 @@ export default function Dashboard() {
           </div>
         )}
       </div>
-
-      {/* {results.map((result, index) => (
-        <div key={index}>
-          <ListItem
-            title={result.name}
-            imageUrl={result.image_url}
-            caption={result.tagline}
-          />
-        </div>
-      ))} */}
     </div>
   );
 }
-
-// class Dashboard extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       error: null,
-//       isLoaded: false,
-//       filteredData: [],
-//       wordEntered: "",
-//       typing: false,
-//       typingTimeout: 0,
-//       query: "",
-//     };
-
-//     this.changeName = this.changeName.bind(this);
-//   }
-
-//   debouncedFetchData = debounce((query, cb) => {
-//     this.searchMovies(query, cb);
-//   }, 500);
-
-//   componentDidMount() {
-//     debouncedFetchData(query, (res) => {
-//       this.setState({ filteredData: res });
-//     });
-//   }
-
-//   // componentDidMount (() => {
-
-//   // }, [query]);
-
-//   render() {
-//     return (
-
-//     );
-//   }
-
-//   goToMovieDetails(movieId) {
-//     this.props.navigate("/movie/" + movieId);
-//   }
-
-//   searchMovies = async (query, cb) => {
-//     console.log("a");
-//     if (this.state.wordEntered === "") {
-//       this.state.filteredData = [];
-//     } else {
-//       fetch("https://localhost:7289/Mupsee/SearchAsync?search=" + query)
-//         .then((res) => res.json())
-//         .then(
-//           (result) => {
-//             this.setState({ filteredData: result });
-//             cb(result);
-//           },
-//           // Note: it's important to handle errors here
-//           // instead of a catch() block so that we don't swallow
-//           // exceptions from actual bugs in components.
-//           (error) => {}
-//         );
-//     }
-//   };
-
-//   changeName = (event) => {
-//     console.log(event);
-
-//     if (this.state.typingTimeout) {
-//       clearTimeout(this.state.typingTimeout);
-//     }
-
-//     this.setState({
-//       wordEntered: event.target.value,
-//       typing: false,
-//       typingTimeout: setTimeout(function () {
-//         console.log("bb");
-//         this.searchMovies();
-//       }, 5000),
-//     });
-//   };
-
-//   handleSubmit = (event) => {
-//     console.log(this.state.wordEntered);
-//     event.preventDefault();
-//     this.searchMovies();
-//   };
-
-//   handleFilter = (event) => {
-//     this.setState({ wordEntered: event.target.value });
-//   };
-// }
-
-// function WithNavigate(props) {
-//   let navigate = useNavigate();
-//   return <Dashboard {...props} navigate={navigate} />;
-// }
-
-// export default WithNavigate;

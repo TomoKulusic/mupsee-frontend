@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./favorites.css";
 import { useNavigate } from "react-router-dom";
+import authHeader from "../../services/auth-header";
 
 export default function Favorites() {
   const [data, setData] = React.useState("");
@@ -11,7 +12,12 @@ export default function Favorites() {
   });
 
   const getFavoriteMovies = () => {
-    fetch("https://localhost:7289/Mupsee/GetFavoriteMovies")
+    const requestOptions = {
+      method: "GET",
+      headers: authHeader(),
+    };
+
+    fetch("https://localhost:7289/Mupsee/GetFavoriteMovies", requestOptions)
       .then((res) => res.json())
       .then(
         (result) => {
