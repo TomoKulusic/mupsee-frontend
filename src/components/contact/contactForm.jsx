@@ -10,8 +10,9 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Link as RouterLink } from "react-router-dom";
 import { useAuth } from "../../services/useAuth";
+import authHeader from "../../services/auth-header";
 
-export const LoginPage = () => {
+export const ContactForm = () => {
   const { login } = useAuth();
 
   const handleSubmit = (event) => {
@@ -19,28 +20,23 @@ export const LoginPage = () => {
 
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: authHeader(),
       body: JSON.stringify({
-        username: "jason_admin",
-        password: "MyPass_w0rd",
+        subject: event.target.subject.value,
+        body: event.target.body.value,
       }),
     };
-    fetch("https://localhost:7289/api/Login", requestOptions)
+    fetch("https://localhost:7289/Email", requestOptions)
       .then((response) => response.json())
 
-      .then((res) => {
-        // localStorage.setItem("token", res.token);
-        login({
-          token: res.token,
-        });
-      })
+      .then((res) => {})
       .catch((err) => {
         console.log(err);
       });
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xl">
       <Box
         sx={{
           marginTop: 8,
@@ -49,32 +45,27 @@ export const LoginPage = () => {
           alignItems: "center",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
-          <LockOutlinedIcon />
-        </Avatar>
         <Typography component="h1" variant="h5">
-          Log In
+          Contact us
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="subject"
+            label="Subject"
+            name="subject"
             autoFocus
           />
           <TextField
-            margin="normal"
+            id="outlined-multiline-static"
             required
+            label="Body"
+            multiline
+            rows={4}
             fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
+            name="body"
           />
           <Button
             type="submit"
@@ -82,17 +73,8 @@ export const LoginPage = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Login In
+            Submit Request
           </Button>
-          <Grid container>
-            <Grid item>
-              <RouterLink to="/register">
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </RouterLink>
-            </Grid>
-          </Grid>
         </Box>
       </Box>
     </Container>

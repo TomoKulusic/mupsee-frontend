@@ -7,6 +7,7 @@ import Favorites from "./components/favorites/favorites";
 import { LoginPage } from "./components/login/login";
 import { ProtectedLayout } from "./components/layouts/protectedLayout";
 import { HomeLayout } from "./components/layouts/loginLayout";
+import { ContactForm } from "./components/contact/contactForm";
 
 function App() {
   return (
@@ -20,9 +21,10 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           {/* </Route> */}
           <Route path="/" element={<ProtectedLayout />}>
-            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="search" element={<Dashboard />} />
             <Route path="movie/:id" element={<MoviePage />} />
             <Route path="favorites" element={<Favorites />} />
+            <Route path="contact" element={<ContactForm />} />
           </Route>
           {/* <Route path="/" element={<Login />} /> */}
           {/* <Route element={<AuthWrapper />}>
