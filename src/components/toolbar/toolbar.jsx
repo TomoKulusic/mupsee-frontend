@@ -9,8 +9,9 @@ import "./toolbar.css";
 
 class ToolbarComponent extends Component {
   pages = [
-    { link: "Dashboard", path: "/dashboard" },
+    { link: "Search", path: "/search" },
     { link: "Favorites", path: "/favorites" },
+    { link: "Contact", path: "/contact" },
   ];
 
   constructor(props) {

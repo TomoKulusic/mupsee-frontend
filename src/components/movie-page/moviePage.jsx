@@ -58,9 +58,15 @@ class MoviePage extends Component {
   }
 
   IsMovieFavorite = () => {
+    const requestOptions = {
+      method: "GET",
+      headers: authHeader(),
+    };
+
     fetch(
       "https://localhost:7289/Mupsee/CheckIsFavorite?movieId=" +
-        this.props.params.id
+        this.props.params.id,
+      requestOptions
     )
       .then((res) => res.json())
       .then(
@@ -193,12 +199,12 @@ class MoviePage extends Component {
 
     const requestOptions = {
       method: "POST",
-      // headers: { "Content-Type": "application/json" },
-      header: authHeader(),
+      headers: authHeader(),
       body: JSON.stringify({
         id: this.state.data.id,
         isFavorite: value,
         image: this.state.data.image,
+        genres: this.state.data.genres,
       }),
     };
     fetch(
