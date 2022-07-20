@@ -190,3 +190,24 @@ a:hover {
 .image-container:hover {
   opacity: 0;
 }
+
+.search-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-container > div {
+  width: 100%;
+}
+
+.search-container > .second-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 3em;
+}
