@@ -1,28 +1,17 @@
 import React, { Component } from "react";
 import "./moviePage.css";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import ShareIcon from "@mui/icons-material/Share";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
-// import Carousel from "react-bootstrap/Carousel";
-
-import { Swiper, SwiperSlide } from "swiper/react";
-import authHeader from "../../services/auth-header";
-
+import { FavoriteService } from "../../services/favoriteService";
+import { MovieService } from "../../services/movieService";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-
-// Import Swiper styles
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/scrollbar";
-import { Pagination, Navigation } from "swiper";
+import Box from "@mui/material/Box";
 
 class MoviePage extends Component {
   constructor(props) {
@@ -37,19 +26,22 @@ class MoviePage extends Component {
       desktop: {
         breakpoint: { max: 3000, min: 1024 },
         items: 3,
-        slidesToSlide: 4, // optional, default to 1.
+        slidesToSlide: 4,
       },
       tablet: {
         breakpoint: { max: 1024, min: 464 },
         items: 2,
-        slidesToSlide: 2, // optional, default to 1.
+        slidesToSlide: 2,
       },
       mobile: {
         breakpoint: { max: 464, min: 0 },
         items: 1,
-        slidesToSlide: 1, // optional, default to 1.
+        slidesToSlide: 1,
       },
     };
+
+    this.favoriteService = new FavoriteService();
+    this.movieService = new MovieService();
   }
 
   componentDidMount() {
@@ -58,16 +50,8 @@ class MoviePage extends Component {
   }
 
   IsMovieFavorite = () => {
-    const requestOptions = {
-      method: "GET",
-      headers: authHeader(),
-    };
-
-    fetch(
-      "https://localhost:7289/Mupsee/CheckIsFavorite?movieId=" +
-        this.props.params.id,
-      requestOptions
-    )
+    this.favoriteService
+      .CheckIsMovieFavorite(this.props.params.id)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -78,10 +62,40 @@ class MoviePage extends Component {
       );
   };
 
+  setAsFavorite = (value) => {
+    this.setState({ isFavorite: value });
+
+    var body = JSON.stringify({
+      id: this.state.data.id,
+      isFavorite: value,
+      image: this.state.data.image,
+    });
+
+    this.favoriteService.SaveMovieAsFavorite(body).then(() => {});
+  };
+
+  getMovie = () => {
+    this.movieService
+      .GetMovieById(this.props.params.id)
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+          this.setState({ data: result });
+        },
+        (error) => {}
+      );
+  };
+
   render() {
     return (
-      <div className="page-class">
-        <div className="page">
+      <div className="movie-box">
+        <Box
+          sx={{
+            width: 1 / 1.1,
+            height: 1,
+          }}
+        >
           {this.state.data != null && (
             <div>
               <div className="movie-description">
@@ -102,17 +116,16 @@ class MoviePage extends Component {
                     <p>{this.state.data.release}</p>
 
                     <p>{this.state.data.runtime}</p>
-                    <p>IMDB: {this.state.data.movieRatings.imdbRating}</p>
+                    <p>IMDB: {this.state.data.movieRatingsVm.imdbRating}</p>
                     <p>
                       ROTTEN:{" "}
-                      {this.state.data.movieRatings.rottenTomatoesRating}
+                      {this.state.data.movieRatingsVm.rottenTomatoesRating}
                     </p>
                   </div>
                   <div className="movie-genres">
                     <p>{this.state.data.genres}</p>
                   </div>
                   <div className="share-button-div">
-                    {" "}
                     <Button
                       variant="contained"
                       endIcon={<ShareIcon />}
@@ -127,6 +140,11 @@ class MoviePage extends Component {
                 </div>
               </div>
               <div className="trailer">
+                {/* <Box
+                    sx={{
+                      width: 1 / 1.1,
+                    }}
+                  > */}
                 <p>Trailers</p>
                 <div className="trailer-container">
                   <Carousel
@@ -162,12 +180,9 @@ class MoviePage extends Component {
                   </Carousel>
                 </div>
               </div>
-              <div>
-                <p>History</p>
-              </div>
-            </div>
+            </div> //
           )}
-        </div>
+        </Box>
         <Snackbar
           open={this.state.snackbar}
           autoHideDuration={2000}
@@ -177,10 +192,6 @@ class MoviePage extends Component {
       </div>
     );
   }
-
-  // _onReady(event) {
-  //   event.target.pauseVideo();
-  // }
 
   handleClick = () => {
     this.setState({ snackbar: true });
@@ -192,46 +203,6 @@ class MoviePage extends Component {
     }
 
     this.setState({ snackbar: false });
-  };
-
-  setAsFavorite = (value) => {
-    this.setState({ isFavorite: value });
-
-    const requestOptions = {
-      method: "POST",
-      headers: authHeader(),
-      body: JSON.stringify({
-        id: this.state.data.id,
-        isFavorite: value,
-        image: this.state.data.image,
-        genres: this.state.data.genres,
-      }),
-    };
-    fetch(
-      "https://localhost:7289/Mupsee/SaveMovieAsFavorite",
-      requestOptions
-    ).then(() => {});
-  };
-
-  getMovie = () => {
-    const requestOptions = {
-      method: "GET",
-      headers: authHeader(),
-    };
-
-    fetch(
-      "https://localhost:7289/Mupsee/SearchByIdAsync?movieId=" +
-        this.props.params.id,
-      requestOptions
-    )
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          console.log(result);
-          this.setState({ data: result });
-        },
-        (error) => {}
-      );
   };
 }
 

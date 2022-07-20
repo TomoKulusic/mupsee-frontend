@@ -15,17 +15,7 @@ export const ProtectedLayout = () => {
       <div className="toolbar">
         <ToolbarComponent></ToolbarComponent>
       </div>
-      <div className="page">{outlet}</div>
+      {outlet}
     </div>
-
-    // <div>
-    //   <AppBar
-    //     pages={[
-    //       { label: "Settings", path: "settings" },
-    //       { label: "Profile", path: "profile" }
-    //     ]}
-    //   />
-    //   {outlet}
-    // </div>
   );
 };

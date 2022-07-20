@@ -1,52 +1,63 @@
 import React, { Component } from "react";
 import "./favorites.css";
-import { useNavigate } from "react-router-dom";
-import authHeader from "../../services/auth-header";
+import { FavoriteService } from "../../services/favoriteService";
 
-export default function Favorites() {
-  const [data, setData] = React.useState("");
-  const navigate = useNavigate();
-
-  React.useEffect(() => {
-    getFavoriteMovies();
-  });
-
-  const getFavoriteMovies = () => {
-    const requestOptions = {
-      method: "GET",
-      headers: authHeader(),
+class Favorites extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: [],
     };
 
-    fetch("https://localhost:7289/Mupsee/GetFavoriteMovies", requestOptions)
+    this.favoriteService = new FavoriteService();
+  }
+
+  componentDidMount() {
+    this.getFavoriteMovies();
+  }
+
+  getFavoriteMovies = () => {
+    this.favoriteService
+      .GetFavoriteMovies()
       .then((res) => res.json())
       .then(
         (result) => {
-          setData(result);
+          this.setState({ data: result });
         },
         (error) => {}
       );
   };
 
-  return (
-    <div className="search">
-      {data.length != 0 && (
-        <div className="dataResult">
-          {data.map((movie) => {
-            return (
-              <div className="movie-container" key={movie.id}>
-                <a onClick={() => navigate(`/movie/${movie.id}`)}>
-                  <div>
+  render() {
+    return (
+      <div className="search">
+        {this.state.data.length != 0 && (
+          <div className="dataResult">
+            {this.state.data.map((movie) => {
+              return (
+                <div className="movie-container" key={movie.id}>
+                  <a href={`/movie/${movie.id}`}>
                     <div>
-                      <img className="image-container" src={movie.image}></img>
-                      <img className="image-container" src={movie.image}></img>
+                      <div>
+                        <img
+                          className="image-container"
+                          src={movie.image}
+                        ></img>
+                        <img
+                          className="image-container"
+                          src={movie.image}
+                        ></img>
+                      </div>
                     </div>
-                  </div>
-                </a>
-              </div>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
+                  </a>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
+  }
 }
+
+export default Favorites;

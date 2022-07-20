@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Link as RouterLink } from "react-router-dom";
 import { useAuth } from "../../services/useAuth";
-import authHeader from "../../services/auth-header";
+import authHeader from "../../services/authHeader";
 
 export const ContactForm = () => {
   const { login } = useAuth();

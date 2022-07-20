@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { Component } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Link as RouterLink } from "react-router-dom";
 import { useAuth } from "../../services/useAuth";
+import UserService from "../../services/userService";
 
 export const LoginPage = () => {
   const { login } = useAuth();
@@ -17,22 +18,22 @@ export const LoginPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: "jason_admin",
-        password: "MyPass_w0rd",
-      }),
-    };
-    fetch("https://localhost:7289/api/Login", requestOptions)
-      .then((response) => response.json())
+    var body = JSON.stringify({
+      username: event.target.username.value,
+      password: event.target.password.value,
+    });
 
+    console.log(body);
+
+    UserService.Login(body)
+      .then((response) => response.json())
       .then((res) => {
-        // localStorage.setItem("token", res.token);
-        login({
-          token: res.token,
-        });
+        if (res === null) {
+        } else {
+          login({
+            token: res.token,
+          });
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -60,12 +61,13 @@ export const LoginPage = () => {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
+            name="username"
+            label="Username"
+            type="string"
+            id="username"
+            placeholder="Dummy"
           />
+
           <TextField
             margin="normal"
             required
@@ -74,7 +76,7 @@ export const LoginPage = () => {
             label="Password"
             type="password"
             id="password"
-            autoComplete="current-password"
+            placeholder="Dummy_user"
           />
           <Button
             type="submit"
@@ -84,17 +86,45 @@ export const LoginPage = () => {
           >
             Login In
           </Button>
-          <Grid container>
-            <Grid item>
-              <RouterLink to="/register">
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </RouterLink>
-            </Grid>
-          </Grid>
         </Box>
       </Box>
     </Container>
   );
 };
+
+// class LoginPage extends Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {};
+//     this.userService = UserService();
+//     this.login = useAuth();
+//   }
+
+//   handleSubmit = (event) => {
+//     event.preventDefault();
+
+//     var body = JSON.stringify({
+//       username: event.target.email.value,
+//       password: event.target.password.value,
+//     });
+
+//     this.userService
+//       .Login(body)
+//       .then((response) => response.json())
+//       .then((res) => {
+//         console.log(res);
+//         this.login({
+//           token: res.token,
+//         });
+//       })
+//       .catch((err) => {
+//         console.log(err);
+//       });
+//   };
+
+//   render() {
+//
+//   }
+// }
+
+// export default LoginPage;
